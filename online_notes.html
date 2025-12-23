@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Online Notes Organizer</title>
+
+<style>
+/* Night Sky Background */
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at bottom, #0b1d3a, #000814);
+    overflow-x: hidden;
+    color: white;
+}
+
+/* Stars */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 2px;
+    background: white;
+    box-shadow:
+        50px 100px white, 150px 200px white, 300px 50px white,
+        400px 300px white, 600px 150px white, 700px 400px white,
+        900px 250px white, 1100px 100px white, 1200px 350px white,
+        200px 500px white, 500px 600px white, 800px 700px white,
+        1000px 550px white, 1300px 650px white;
+    opacity: 0.8;
+}
+
+/* Notes App Styling */
+.container {
+    width: 70%;
+    margin: 40px auto;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+}
+
+textarea {
+    width: 100%;
+    height: 80px;
+    padding: 8px;
+    border-radius: 5px;
+    border: none;
+    resize: none;
+}
+
+button {
+    padding: 8px 14px;
+    margin-top: 8px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.note {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>🌌 My Notes</h2>
+
+    <textarea id="noteText" placeholder="Write your note..."></textarea>
+    <button onclick="addNote()">Add Note</button>
+
+    <div id="notes"></div>
+</div>
+
+<script>
+let notes = JSON.parse(localStorage.getItem("notes")) || [];
+showNotes();
+
+function addNote() {
+    let text = document.getElementById("noteText").value.trim();
+    if (text === "") return;
+
+    notes.push(text);
+    localStorage.setItem("notes", JSON.stringify(notes));
+    document.getElementById("noteText").value = "";
+    showNotes();
+}
+
+function showNotes() {
+    let output = "";
+    notes.forEach((note, index) => {
+        output += `
+        <div class='note'>
+            ${note}<br>
+            <button onclick='deleteNote(${index})'>Delete</button>
+        </div>`;
+    });
+    document.getElementById("notes").innerHTML = output;
+}
+
+function deleteNote(index) {
+    notes.splice(index, 1);
+    localStorage.setItem("notes", JSON.stringify(notes));
+    showNotes();
+}
+</script>
+
+</body>
+</html>
